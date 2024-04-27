@@ -36,6 +36,8 @@ class FeedForward(tf.keras.layers.Layer):
         return out
     
 def positional_encoding(length, depth):
+    """Copied from Siddharta Laloux's HW5p"""
+    ## Can remove signature
     depth = depth/2
     ## Generate a range of positions and depths 
     positions = np.arange(length)[:, np.newaxis]    # (seq, 1)
@@ -49,6 +51,7 @@ def positional_encoding(length, depth):
 
 
 class PositionalEncoding(tf.keras.layers.Layer):
+    """Copied from Siddharta Laloux's HW5p"""
     def __init__(self, vocab_size, embed_size, window_size):
         super().__init__()
         self.embed_size = embed_size

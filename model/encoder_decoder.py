@@ -66,3 +66,34 @@ class DecoderBlock(tf.keras.layers.Layer):
 
         self.ffn = FeedForward(ff_num_lyrs, ff_units, ff_hidden)
         
+    def call(self, x, enccoder_out): 
+        
+        out = self.causal_self_atten(x)
+        out = self.cross_attention(x, enccoder_out)
+
+        out = self.ffn(out)
+
+        return out
+    
+class TransformerDecoder(tf.keras.layers.Layer): 
+
+    def __init__(self, num_decoder_blcks, num_heads, key_dim ,**kwargs): 
+
+        super().__init__()
+
+        self.num_decoder_blcks = num_decoder_blcks
+        self.num_heads = num_heads
+        self.key_dim = key_dim
+
+        self.decoder_list = [
+            DecoderBlock(num_heads, key_dim, **kwargs) for _ in range(num_decoder_blcks)
+        ]
+
+    def call(self, x, encoder_out): 
+
+        out = x
+
+        for i in range(self.num_decoder_blocks): 
+            out = self.decoder_list[i](out, encoder_out) 
+
+        return out
