@@ -44,6 +44,10 @@ class TransformerEncoder(tf.keras.layers.Layer):
         return self.encoders(x)
 
 
+test_model = TransformerEncoder(4, 6, 3)
+print("hello!")
+
+
 class DecoderBlock(tf.keras.layers.Layer): 
 
     def __init__(self, num_heads, key_dim, ff_num_lyrs, ff_units, ff_hidden = None, **kwargs): 

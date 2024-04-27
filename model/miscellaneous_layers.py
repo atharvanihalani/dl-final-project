@@ -1,26 +1,34 @@
 import numpy as np
 import tensorflow as tf
+from tensorflow.keras import Sequential
+from tensorflow.keras.layers import Dense, LayerNormalization
 
 class FeedForward(tf.keras.layers.Layer): 
 
     def __init__(self, num_layers, units_end, hidden_size=None, **kwargs): 
+        '''
+        This class wraps around a Sequence of dense layers.
+        num_layers: the number of layers in this feedforward sequence
+        units_end: the dimensions of the output
+        hidden_size: the dimensions of the hidden layers
+        '''
 
         super().__init__(**kwargs)
 
-        self.units_end = units_end
-
         if not hidden_size: 
-            self.hidden_size = units_end
-        else: self.hidden_size = hidden_size
+            hidden_size = units_end
 
-        layer_list = [tf.keras.layers.Dense(hidden_size, activation = "relu") for _ in range(num_layers-1)]
-        layer_list.append(tf.keras.layers.Dense(units_end, activation = "relu"))
+        layer_list = [Dense(hidden_size, activation = "leaky_relu") for _ in range(num_layers-1)]
+        layer_list.append(Dense(units_end, activation = "leaky_relu"))
 
         self.dense = tf.keras.Sequential(layer_list)
-
-        self.normalise = tf.keras.layers.LayerNormalization()
+        self.normalise = LayerNormalization()
 
     def call(self, x): 
+        '''
+        Passes the input through the feedforward layers, normalizes it, and returns the output
+        x: input
+        '''
 
         out = self.dense(x)
         out = self.normalise(out)
@@ -28,7 +36,6 @@ class FeedForward(tf.keras.layers.Layer):
         return out
     
 def positional_encoding(length, depth):
-    ## Can remove signature
     depth = depth/2
     ## Generate a range of positions and depths 
     positions = np.arange(length)[:, np.newaxis]    # (seq, 1)
