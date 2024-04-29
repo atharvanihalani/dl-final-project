@@ -4,7 +4,7 @@ from miscellaneous_layers import FeedForward
 
 class EncoderBlock(tf.keras.layers.Layer): 
 
-    def __init__(self, num_heads, key_dim, ff_num_lyrs, ff_units, ff_hidden = None, **kwargs): 
+    def __init__(self, num_heads, key_dim, units, ff_num_lyrs, ff_hidden = None, **kwargs): 
 
         super().__init__(**kwargs)
 
@@ -13,7 +13,7 @@ class EncoderBlock(tf.keras.layers.Layer):
             key_dim = key_dim
         )
 
-        self.ffn = FeedForward(ff_num_lyrs, ff_units, ff_hidden)
+        self.ffn = FeedForward(ff_num_lyrs, units, ff_hidden)
 
 
     def call(self, x): 
@@ -25,7 +25,7 @@ class EncoderBlock(tf.keras.layers.Layer):
     
 class TransformerEncoder(tf.keras.layers.Layer):
 
-    def __init__(self, num_encoder_blcks, num_heads, key_dim ,**kwargs): 
+    def __init__(self, units, num_encoder_blcks, num_heads, key_dim ,**kwargs): 
 
         super().__init__()
 
@@ -34,7 +34,7 @@ class TransformerEncoder(tf.keras.layers.Layer):
         self.key_dim = key_dim
 
         encoder_list = [
-            EncoderBlock(num_heads, key_dim, **kwargs) for _ in range(num_encoder_blcks)
+            EncoderBlock(num_heads, key_dim, units, **kwargs) for _ in range(num_encoder_blcks)
         ]
 
         self.encoders = tf.keras.Sequential(encoder_list)
@@ -46,7 +46,7 @@ class TransformerEncoder(tf.keras.layers.Layer):
 
 class DecoderBlock(tf.keras.layers.Layer): 
 
-    def __init__(self, num_heads, key_dim, ff_num_lyrs, ff_units, ff_hidden = None, **kwargs): 
+    def __init__(self, num_heads, key_dim, units, ff_num_lyrs, ff_hidden = None, **kwargs): 
 
         super().__init__()
 
@@ -60,7 +60,7 @@ class DecoderBlock(tf.keras.layers.Layer):
             key_dim = key_dim
         )
 
-        self.ffn = FeedForward(ff_num_lyrs, ff_units, ff_hidden)
+        self.ffn = FeedForward(ff_num_lyrs, units, ff_hidden)
         
     def call(self, x, enccoder_out): 
         
@@ -73,7 +73,7 @@ class DecoderBlock(tf.keras.layers.Layer):
     
 class TransformerDecoder(tf.keras.layers.Layer): 
 
-    def __init__(self, num_decoder_blcks, num_heads, key_dim ,**kwargs): 
+    def __init__(self, units, num_decoder_blcks, num_heads, key_dim, **kwargs): 
 
         super().__init__()
 
@@ -82,7 +82,7 @@ class TransformerDecoder(tf.keras.layers.Layer):
         self.key_dim = key_dim
 
         self.decoder_list = [
-            DecoderBlock(num_heads, key_dim, **kwargs) for _ in range(num_decoder_blcks)
+            DecoderBlock(num_heads, key_dim, units, **kwargs) for _ in range(num_decoder_blcks)
         ]
 
     def call(self, x, encoder_out): 

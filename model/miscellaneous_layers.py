@@ -44,7 +44,7 @@ def positional_encoding(length, depth):
 
 class PositionalEncoding(tf.keras.layers.Layer):
     """Copied from Siddharta Laloux's HW5p"""
-    def __init__(self, vocab_size, embed_size, window_size):
+    def __init__(self, embed_size, window_size, num_dense_layers = 1):
         super().__init__()
         self.embed_size = embed_size
 
@@ -52,6 +52,11 @@ class PositionalEncoding(tf.keras.layers.Layer):
         ## NOTE: no vocab defined, this is probably a Dense layer or sequence 
         ## of dense layers
         # self.embedding = tf.keras.layers.Embedding(vocab_size, embed_size)
+        embedding_list = [
+            tf.keras.layers.Dense(embed_size, activation = "relu") for _ in range(num_dense_layers)
+        ]
+
+        self.embedding = tf.keras.Sequential(embedding_list, name = "positional encoding embedding layer")
 
         ## Implement sinosoidal positional encoding: offset by varying sinosoidal frequencies. 
         ## HINT: May want to use the function above...
