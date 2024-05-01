@@ -7,11 +7,10 @@ def main():
         units = 88,
         window_size = 128, 
         embed_size = 512,
-        )
-    
+    )
 
-    test_model.build()
-    
+    test_model.build(input_shape=(32, 128, 84))
+
     test_model.summary()
 
     print(test_model)

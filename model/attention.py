@@ -87,6 +87,7 @@ class CausalSelfAttentionResidual(MHAttentionResidual):
             key = x, 
             value = x,
             use_causal_mask = True, 
+            return_attention_scores = True, 
         )
 
         residual = self.add([x, out])

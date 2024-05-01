@@ -26,7 +26,7 @@ class MusicDecoderTransformer(tf.keras.Model):
 
         self.decoder = TransformerDecoder(
             units = 1024,  
-            num_decoder_blcks = 8, 
+            num_decoder_blocks = 8, 
             num_heads = 6, 
             key_dim = 64, 
             ff_num_lyrs = 1,  
@@ -36,7 +36,7 @@ class MusicDecoderTransformer(tf.keras.Model):
 
     def call(self, x): 
 
-        context, x = self.embedding(x)
+        context = x = self.embedding(x)
 
         encoder_out = self.encoder(context) 
 

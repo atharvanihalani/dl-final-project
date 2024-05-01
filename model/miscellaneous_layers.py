@@ -5,7 +5,7 @@ from tensorflow.keras.layers import Dense, LayerNormalization
 
 class FeedForward(tf.keras.layers.Layer): 
 
-    def __init__(self, num_layers, units_end, hidden_size=None, **kwargs): 
+    def __init__(self, num_layers, units_end, hidden_size = None, **kwargs): 
         '''
         This class wraps around a Sequence of dense layers.
         num_layers: the number of layers in this feedforward sequence
@@ -64,7 +64,7 @@ class PositionalEncoding(tf.keras.layers.Layer):
             tf.keras.layers.Dense(embed_size, activation = "relu") for _ in range(num_dense_layers)
         ]
 
-        self.embedding = tf.keras.Sequential(embedding_list, name = "positional encoding embedding layer")
+        self.embedding = tf.keras.Sequential(embedding_list, name = "positional_encoding_embedding_layer")
 
         ## Implement sinosoidal positional encoding: offset by varying sinosoidal frequencies. 
         ## HINT: May want to use the function above...
@@ -72,10 +72,10 @@ class PositionalEncoding(tf.keras.layers.Layer):
 
     def call(self, x):
         ## Get embeddings and and scale them by sqrt of embedding size, and add positional encoding.
-        # length = tf.shape(x)[1]
+        length = tf.shape(x)[1]
         x = self.embedding(x)
         # This factor sets the relative scale of the embedding and positonal_encoding.
         x *= tf.math.sqrt(tf.cast(self.embed_size, tf.float32))
-        x = x + self.pos_encoding
+        x = x + self.pos_encoding[tf.newaxis, :length, :]
         return x
     

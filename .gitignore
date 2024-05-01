@@ -1,0 +1,3 @@
+# prevents git errors due to large file loading
+data/saarland/*
+data/maestro/*

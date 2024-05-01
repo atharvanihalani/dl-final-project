@@ -44,10 +44,6 @@ class TransformerEncoder(tf.keras.layers.Layer):
         return self.encoders(x)
 
 
-test_model = TransformerEncoder(4, 6, 3)
-print("hello!")
-
-
 class DecoderBlock(tf.keras.layers.Layer): 
 
     def __init__(self, num_heads, key_dim, units, ff_num_lyrs, ff_hidden = None, **kwargs): 
@@ -77,16 +73,16 @@ class DecoderBlock(tf.keras.layers.Layer):
     
 class TransformerDecoder(tf.keras.layers.Layer): 
 
-    def __init__(self, units, num_decoder_blcks, num_heads, key_dim, **kwargs): 
+    def __init__(self, units, num_decoder_blocks, num_heads, key_dim, **kwargs): 
 
         super().__init__()
 
-        self.num_decoder_blcks = num_decoder_blcks
+        self.num_decoder_blocks = num_decoder_blocks
         self.num_heads = num_heads
         self.key_dim = key_dim
 
         self.decoder_list = [
-            DecoderBlock(num_heads, key_dim, units, **kwargs) for _ in range(num_decoder_blcks)
+            DecoderBlock(num_heads, key_dim, units, **kwargs) for _ in range(num_decoder_blocks)
         ]
 
     def call(self, x, encoder_out): 
