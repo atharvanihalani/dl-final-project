@@ -1,6 +1,6 @@
 import tensorflow as tf
-from attention import CrossAttentionResidual, SelfAttentionResidual, CausalSelfAttentionResidual
-from miscellaneous_layers import FeedForward
+from model.attention import CrossAttentionResidual, SelfAttentionResidual, CausalSelfAttentionResidual
+from model.miscellaneous_layers import FeedForward
 
 class EncoderBlock(tf.keras.layers.Layer): 
 

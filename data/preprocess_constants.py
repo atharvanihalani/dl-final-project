@@ -1,6 +1,7 @@
 # File for global variables
 
-TRAIN_IN_SIZE = () # should be (batch, timesteps, frequency bins)
+TRAIN_IN_SIZE = () # should be (batch, window, frequency bins)
+                    
 TRAIN_OUT_SIZE = () # should be (batch, timesteps (different scale from above), 88)
 
 TEST_IN_SIZE = ()

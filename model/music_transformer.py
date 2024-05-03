@@ -1,6 +1,6 @@
 import tensorflow as tf
-from encoder_decoder import TransformerEncoder, TransformerDecoder
-from miscellaneous_layers import PositionalEncoding
+from model.encoder_decoder import TransformerEncoder, TransformerDecoder
+from model.miscellaneous_layers import PositionalEncoding
 
 ## TODO: double-check the propagation of parametres/hyperparametres through
 ## the classes and layers

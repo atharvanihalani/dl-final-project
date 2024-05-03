@@ -4,7 +4,7 @@ import librosa.display
 import matplotlib.pyplot as plt
 import numpy as np
 import pretty_midi
-from globals import SAMPLING_RATE, SECONDS, BINS_PER_OCTAVE, START_TOKENS, END_TOKENS
+from preprocess_constants import SAMPLING_RATE, SECONDS, BINS_PER_OCTAVE, START_TOKENS, END_TOKENS
 
 def lame_process(input_file, output_file):
     '''
@@ -111,7 +111,7 @@ def midi_to_piano_roll(midi_file_path, sr, start_pitch=19, end_pitch=107):
     return piano_roll
 
     
-def main():
+def test_preprocess():
     # convert_mp3_to_wav("data/saarland/mp3", "data/saarland/wav") 
     cqt1 = wav_to_spectrogram("data/saarland/wav/Bach_BWV849-01_001_20090916-SMD.wav", SAMPLING_RATE, SECONDS, BINS_PER_OCTAVE)
     print(cqt1.shape)
@@ -119,4 +119,4 @@ def main():
     print(pm1.shape)
 
 if __name__ == '__main__':
-    main()
+    test_preprocess()
