@@ -3,6 +3,7 @@ import librosa
 import librosa.display
 import matplotlib.pyplot as plt
 import numpy as np
+import tensorflow as tf
 import pretty_midi
 from preprocess_constants import SAMPLING_RATE, SECONDS, BINS_PER_OCTAVE, START_TOKENS, END_TOKENS
 
@@ -29,13 +30,14 @@ def convert_mp3_to_wav(input_path, output_path):
     else:
         lame_process(input_path, output_path)
 
+@tf.numpy_function(Tout=tf.float32)
 def wav_to_spectrogram(wav_file, sr, seconds, bins_per_octave):
     """
     Converts a wav file into a tensor input for transformer model
     param wav: path to a wav file 
     """
-    y, s = librosa.load(wav_file)
-    print(f'sampling rate: {sr}')
+    y, _ = librosa.load(wav_file)
+    # print(f'sampling rate: {sr}')
 
     spectrogram = librosa.cqt(y, sr = sr, bins_per_octave = bins_per_octave) #only have to define either n_bins or bins_per_octave
     spectrogram = librosa.amplitude_to_db(np.abs(spectrogram), ref = np.max) #convert to dB scale 
@@ -73,7 +75,7 @@ def wav_to_spectrogram(wav_file, sr, seconds, bins_per_octave):
     windows = np.pad(windows, pad_end_tokens, 'constant', constant_values= END_TOKENS)
 
     #plot_spectrogram(spectrogram_db, sr) '''
-    return windows
+    return tf.convert_to_tensor(windows)
 
 def plot_spectrogram(spectrogram, sr):
     """
@@ -86,12 +88,15 @@ def plot_spectrogram(spectrogram, sr):
     plt.tight_layout()
     plt.show()
 
+@tf.numpy_function(Tout=tf.float32)
 def midi_to_piano_roll(midi_file_path, sr, start_pitch=19, end_pitch=107):
     '''
     Returns an np array of the piano roll representation of a midi file, 
     with 88 notes representing those of a piano keyboard rather than 
     the default 128 notes, that is, from MIDI note 21 (A0) to MIDI note 108 (C8).
     '''
+    midi_file_path=tf.compat.path_to_str(midi_file_path).decode("utf-8")
+
     midi_data = pretty_midi.PrettyMIDI(midi_file_path)
 
     raw_piano_roll = midi_data.get_piano_roll(fs=sr)[start_pitch:end_pitch]
@@ -108,7 +113,9 @@ def midi_to_piano_roll(midi_file_path, sr, start_pitch=19, end_pitch=107):
     piano_roll = np.reshape(piano_roll, (-1, SECONDS * SAMPLING_RATE, piano_roll.shape[1]))
     #print(f'shape of pianoroll after splitting: {piano_roll.shape}')
     #print(f'size of padded/split pianoroll in GB: {piano_roll.itemsize * piano_roll.size }')
-    return piano_roll
+    # return piano_roll
+    return tf.cast(tf.convert_to_tensor(piano_roll), dtype=tf.float32)
+
 
     
 def test_preprocess():
@@ -119,4 +126,5 @@ def test_preprocess():
     print(pm1.shape)
 
 if __name__ == '__main__':
-    test_preprocess()
+    convert_mp3_to_wav('data/saarland/mp3', 'data/saarland/wav')
+    # test_preprocess()

@@ -1,6 +1,8 @@
 from model.music_transformer import MusicDecoderTransformer
 from data.preprocess import wav_to_spectrogram, midi_to_piano_roll
-from data.globals import SAMPLING_RATE, SECONDS, BINS_PER_OCTAVE, START_TOKENS, END_TOKENS
+from data.preprocess_constants import SAMPLING_RATE, SECONDS, BINS_PER_OCTAVE, START_TOKENS, END_TOKENS
+import tensorflow as tf
+
 
 def main():
     print("testing model instantiation")
@@ -25,3 +27,4 @@ def main():
 
 if __name__ == "__main__": 
     main()
+
