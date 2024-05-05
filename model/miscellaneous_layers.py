@@ -55,6 +55,7 @@ class PositionalEncoding(tf.keras.layers.Layer):
     def __init__(self, embed_size, window_size, num_dense_layers = 1):
         super().__init__()
         self.embed_size = embed_size
+        self.window_size = window_size
 
         ##TODO: Embed labels into an optimizable embedding space
         ## NOTE: no vocab defined, this is probably a Dense layer or sequence 
@@ -72,10 +73,10 @@ class PositionalEncoding(tf.keras.layers.Layer):
 
     def call(self, x):
         ## Get embeddings and and scale them by sqrt of embedding size, and add positional encoding.
-        length = tf.shape(x)[1]
+        # length = tf.shape(x)[1]
         x = self.embedding(x)
         # This factor sets the relative scale of the embedding and positonal_encoding.
         x *= tf.math.sqrt(tf.cast(self.embed_size, tf.float32))
-        x = x + self.pos_encoding[tf.newaxis, :length, :]
+        x = x + self.pos_encoding[tf.newaxis, :self.window_size, :]
         return x
     

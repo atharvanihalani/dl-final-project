@@ -1,3 +1,5 @@
 # prevents git errors due to large file loading
 data/saarland/*
 data/maestro/*
+model/weights/*
+model/train-history/*

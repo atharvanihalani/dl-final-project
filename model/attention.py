@@ -37,11 +37,11 @@ class CrossAttentionResidual(MHAttentionResidual):
 
     def call(self, x, context): 
 
-        out, attention_scores = self.multi_head_attention(
+        out = self.multi_head_attention(
             query = x, 
             key = context, 
             value = context,
-            return_attention_scores = True, 
+            return_attention_scores = False, 
         )
 
         residual = self.add([x, out])
@@ -57,11 +57,11 @@ class SelfAttentionResidual(MHAttentionResidual):
 
     def call(self, x): 
 
-        out, attention_scores = self.multi_head_attention(
+        out = self.multi_head_attention(
             query = x, 
             key = x, 
             value = x,
-            return_attention_scores = True, 
+            return_attention_scores = False, 
         )
 
         residual = self.add([x, out])
@@ -82,12 +82,12 @@ class CausalSelfAttentionResidual(MHAttentionResidual):
 
     def call(self, x): 
 
-        out, attention_scores = self.multi_head_attention(
+        out = self.multi_head_attention(
             query = x, 
             key = x, 
             value = x,
             use_causal_mask = True, 
-            return_attention_scores = True, 
+            return_attention_scores = False, 
         )
 
         residual = self.add([x, out])

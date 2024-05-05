@@ -7,38 +7,44 @@ from model.miscellaneous_layers import PositionalEncoding
 
 class MusicDecoderTransformer(tf.keras.Model): 
 
-    def __init__(self, units, window_size, embed_size = 512, **kwargs):
+    def __init__(self, units, input_window_size, output_window_size, embed_size = 512, **kwargs):
 
         super().__init__()
 
         self.embed_size = embed_size
         # define model architecture here
 
-        self.embedding = PositionalEncoding(embed_size, window_size)
+        self.encoder_embedding = PositionalEncoding(embed_size, input_window_size)
+
+        self.decoder_embedding = PositionalEncoding(embed_size, output_window_size)
 
         self.encoder = TransformerEncoder(
-            units = 1024,  
-            num_encoder_blcks = 8, 
-            num_heads = 6, 
+            units = 512,  
+            num_encoder_blcks = 3, 
+            num_heads = 3, 
             key_dim = 64, 
             ff_num_lyrs = 1,  
         )
 
         self.decoder = TransformerDecoder(
-            units = 1024,  
-            num_decoder_blocks = 8, 
-            num_heads = 6, 
+            units = 512,  
+            num_decoder_blocks = 3, 
+            num_heads = 3, 
             key_dim = 64, 
             ff_num_lyrs = 1,  
         )
 
         self.final_dense = tf.keras.layers.Dense(units, activation = "sigmoid")
 
-    def call(self, x): 
+    def call(self, inputs): 
 
-        context = x = self.embedding(x)
+        context, x = inputs
+
+        context = self.encoder_embedding(context)
 
         encoder_out = self.encoder(context) 
+
+        x = self.decoder_embedding(x)
 
         decoder_out = self.decoder(x, encoder_out)
 

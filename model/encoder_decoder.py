@@ -62,10 +62,10 @@ class DecoderBlock(tf.keras.layers.Layer):
 
         self.ffn = FeedForward(ff_num_lyrs, units, ff_hidden)
         
-    def call(self, x, enccoder_out): 
+    def call(self, x, encoder_out): 
         
         out = self.causal_self_atten(x)
-        out = self.cross_attention(x, enccoder_out)
+        out = self.cross_attention(x, encoder_out)
 
         out = self.ffn(out)
 

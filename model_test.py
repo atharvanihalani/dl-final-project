@@ -13,7 +13,7 @@ def main():
 
     test_model = MusicDecoderTransformer(
         units = 88,
-        window_size = 217, 
+        input_window_size = 217, 
         embed_size = 512,
     )
 
